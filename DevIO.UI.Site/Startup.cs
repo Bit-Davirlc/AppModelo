@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System;
+using DevIO.UI.Site.Servicos;
+using DevIO.UI.Site.Data;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Configuration;
@@ -26,6 +29,15 @@ namespace DevIO.UI.Site
             });
 
             services.AddControllersWithViews();
+
+            services.AddTransient<IPedidoRepository, PedidoRepository>();
+
+            services.AddTransient<IOperacaoTransient, Operacao>();
+            services.AddScoped<IOperacaoScoped, Operacao>();
+            services.AddSingleton<IOperacaoSingleton, Operacao>(); //Instância a ser criada independente
+            services.AddSingleton<IOperacaoSingletonInstance>(new Operacao(Guid.Empty)); //Instância já pronta id = 0
+
+            services.AddTransient<OperacaoService>();
         }
 
         public IConfiguration Configuration { get; }
